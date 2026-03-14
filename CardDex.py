@@ -1,54 +1,72 @@
+import CardDexTools
+import os
+
+
 listac = {}
 listae = {}
 
-decisao = input("Queres criar uma lista(W), adicionar uma carta a uma lista existente(A) ou ver uma lista(R): ")
-if decisao.lower() == "w":
-    nomelistac_entry = input("Qual o nome da lista que queres criar: ").strip().lower()
-    while True:
-       nomecc_entry = input("Nome da carta(escreve sair quando acabares): ").strip().lower()
-       if nomecc_entry == "sair":
-          break
-       else:
-          tipocc_entry = input(f"Qual o tipo de {nomecc_entry.capitalize()}: ").strip().lower()
-          listac[nomecc_entry] = tipocc_entry
-    with open(f"{nomelistac_entry}.txt", "w", encoding="utf-8") as fileuser:
-       fileuser.write("Lista de Cartas:\n")
-       for nome, tipo in listac.items():
-          fileuser.write(f"- {nome}: {tipo}\n")
-       print("Ficheiro criado com sucesso!")
-
-elif decisao.lower() == "a":
-    nomelistae_entry = input("Qual a lista que queres editar: ").strip().lower()
-    try:
-         with open(f"{nomelistae_entry}.txt", "r", encoding="utf-8") as fileuser:
-            pass
+decisao = input("Criar/Eliminar uma lista (C)\nAdicionar/Remover cartas de uma lista existente (A)\nVer uma lista (V) \nEscreva algo sem ser as opçoes para sair:")
+if decisao.lower() == "c":
+   decc = input("Criar (C)\nEliminar (E) ").strip().lower()
+   if decc.lower() == "c":
+      usercname = input("Qual o nome da lista que queres criar: ").strip().lower()
+      if os.path.exists(f"{usercname}.txt"):
+         print("O ficheiro já existe!")
+      else:
          while True:
-            nomece_entry = input("Nome da carta(escreve sair quando acabares): ").strip().lower()
-            if nomece_entry.lower() == "sair":
+            cartaum = input("Nome da carta:(ou escreve sair quando acabares): ").strip().lower()
+            if cartaum == "sair":
                break
             else:
-               tipoce_entry = input(f"Qual o tipo de {nomece_entry.capitalize()}: ").strip().lower()
-               listae[nomece_entry] = tipoce_entry
-         with open(f"{nomelistae_entry}.txt", "a", encoding="utf-8") as fileuser:
+               tipoum = input(f"Tipo de {cartaum.capitalize()}: ").strip().lower()
+               listac[cartaum] = tipoum
+         with open(f"{usercname}.txt", "w", encoding="utf-8") as fileuser:
+            fileuser.write(f"Lista {usercname.capitalize()}:\n")
+            for nome, tipo in listac.items():
+               fileuser.write(f"- {nome}: {tipo}\n")
+            print("Lista criada com sucesso!")
+
+   elif decc.lower() == "e":
+      userename = input("Qual o nome do ficheiro que queres eliminar: ").strip().lower()
+      if os.path.exists(f"{userename}.txt"):
+         os.remove(f"{userename}.txt")
+         print(f"O ficheiro {userename} foi eliminado!")
+      else:
+         print("O ficheiro não foi encontrado.")
+
+elif decisao.lower() == "a":
+   filetoedit = input("Qual a lista que queres editar: ").strip().lower()
+   try:
+      with open(f"{filetoedit}.txt", "r", encoding="utf-8") as fileuser:
+         pass
+      deca = input("Adicionar (A)\nRemover (R) ").strip().lower()
+      if deca.lower() == "a":
+         while True:
+            cartadois = input("Nome da carta:(ou escreve sair quando acabares): ").strip().lower()
+            if cartadois == "sair":
+               break
+            else:
+               tipodois = input(f"Tipo de {cartadois.capitalize()}: ").strip().lower()
+               listae[cartadois] = tipodois
+         with open(f"{filetoedit}.txt", "a", encoding="utf-8") as fileuser:
             for nome, tipo in listae.items():
                fileuser.write(f"- {nome}: {tipo}\n")
-            print("Cartas adicionadas com sucesso!")
-        
-    except FileNotFoundError:
-        print("A lista ainda não existe.")
+            print("Nomes adicionados com sucesso!")
+      if deca.lower() == "r":
+         cartael = input("Qual o nome da carta que queres eliminar: ").strip().lower()
+         CardDexTools.remover_carta(filetoedit, cartael)
+   except FileNotFoundError:
+      print("O ficheiro ainda não existe.")
 
-elif decisao.lower() == "r":
-    nomelistav_entry = input("Qual o nome da lista que queres ver: ").strip().lower()
-    try:
-       with open(f"{nomelistav_entry}.txt", "r", encoding="utf-8") as fileuser:
-        conteudo = fileuser.read()
-        print("--- Conteúdo do Ficheiro ---")
-        print(conteudo)
-    except FileNotFoundError:
-        print("A lista ainda não existe.")
-
-elif decisao.lower() == "sair":
-   exit()
+elif decisao.lower() == "v":
+   filetosee = input("Qual o nome da lista que queres ver: ").strip().lower()
+   try:
+      with open(f"{filetosee}.txt", "r", encoding="utf-8") as fileuser:
+         conteudo = fileuser.read()
+         print("--- Conteúdo do Ficheiro ---")
+         print(conteudo)
+   except FileNotFoundError:
+      print("O ficheiro ainda não existe.")
 
 else:
-   print("Comando não válido!")
+   print("Obrigado!")
