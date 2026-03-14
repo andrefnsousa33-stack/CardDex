@@ -7,7 +7,7 @@ def criar_file(usercname, frameante, frameno, lbltit):
     with open(f"{user}.txt", "w", encoding="utf-8") as fileuser:
         
         fileuser.write("Cartas:\n")
-        print(f"A criar: {usercname}.txt")
+        print(f"A criar: {user}.txt")
     frameante.pack_forget()
     frameno.pack(pady=20, fill="both", expand=True)
 
