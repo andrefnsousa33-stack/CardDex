@@ -1,79 +1,37 @@
-import os
+import customtkinter
 
-def remover_carta(ficheiro_nome, carta_a_remover):
-    linhas_vivas = []
-    encontrado = False
+def mostrar_criar(framever, framecriar):
+    framever.pack_forget()
+    framecriar.pack(pady=20, fill="both", expand=True)
 
-    with open(f"{ficheiro_nome}.txt", "r", encoding="utf-8") as f:
-        for linha in f:
-            if carta_a_remover not in linha:
-                linhas_vivas.append(linha)
-            else:
-                encontrado = True
-        
-    with open(f"{ficheiro_nome}.txt", "w", encoding="utf-8") as f:
-        f.writelines(linhas_vivas)
-            
-    if encontrado:
-        print(f"A carta {carta_a_remover.capitalize()} foi removida.")
-    else:
-        print("Carta não encontrada.")
+def mostrar_ver(frame_criar, frame_ver):
+    frame_criar.pack_forget()
+    frame_ver.pack(pady=20, fill="both", expand=True)
 
 
-def ver_ficheiro(filetosee):
-    try:
-       with open(f"{filetosee}.txt", "r", encoding="utf-8") as file:
-        conteudo = file.read()
-        print("--- Conteúdo do Ficheiro ---")
-        print(conteudo)
-    except FileNotFoundError:
-        print("A lista ainda não existe.")
-
-
-def verif_file(filetoverif):
-    try:
-        with open(f"{filetoverif}.txt", "r", encoding="utf-8") as ficheiro:
-           content = ficheiro.read()
-    except FileNotFoundError:
-        print("A lista ainda não existe.")
-
-
-def add_nomes(filetoedit):
-    listateluser = {}
+def executar_criacao(filename, label_resultado):
+    nome_do_ficheiro = filename.get()
     while True:
-        carta = input("Nome da carta(ou escreve sair quando acabares): ").strip().lower()
-        if carta == "sair":
-            break
+        if nome_do_ficheiro.strip() == "":
+            label_resultado.configure(text="Erro: Escreve um nome!", text_color="red")
         else:
-            ctipo= input(f"Tipo de {carta.capitalize()}: ").strip().lower()
-            listateluser[carta] = ctipo
-    with open(f"{filetoedit}.txt", "a", encoding="utf-8") as ficheiro:
-        for nome, tipo in listateluser.items():
-            ficheiro.write(f"- {nome}: {tipo}\n")
-        print("Carta/s adicionada/s com sucesso!")
+            with open(f"{nome_do_ficheiro}.txt", "w", encoding="utf-8") as fileuser:
+                fileuser.write("Lista de Amigos:\n")
+                print(f"A criar: {nome_do_ficheiro}.txt")
+            label_resultado.configure(text=f"Ficheiro {nome_do_ficheiro}.txt criado!", text_color="green")
+            break
 
-
-def elim_file():
-    userename = input("Qual o nome da lista que queres eliminar: ").strip().lower()
-    if os.path.exists(f"{userename}.txt"):
-        os.remove(f"{userename}.txt")
-        print(f"A lista {userename} foi eliminada!")
-    else:
-        print("A lista não foi encontrado.")  
-
-
-def criar_file():
-    listatel = {}
-    usercname = input("Qual o nome do ficheiro que queres criar: ").strip().lower()
+def ver_ficheiro(filenam, labelresultado):
+    file = filenam.get()
     while True:
-        nomec = input("Nome da carta(ou escreve sair quando acabares): ").strip().lower()
-        if nomec == "sair":
-            break
-        else:
-            tipoc = input(f"Tipo de {nomec.capitalize()}: ").strip().lower()
-            listatel[nomec] = tipoc
-    with open(f"{usercname}.txt", "w", encoding="utf-8") as fileuser:
-        fileuser.write("Lista de Amigos:\n")
-        for nome, tipo in listatel.items():
-            fileuser.write(f"- {nome}: {tipo}\n")
-        print("Lista criada com sucesso!")  
+        try:
+            with open(f"{file}.txt", "r", encoding="utf-8") as filee:
+                conteudo = filee.read()
+                print("--- Conteúdo do Ficheiro ---")
+                print(conteudo)
+                labelresultado.configure(text=f"Conteudo do ficheiro:\n{conteudo}", text_color="green")
+        except FileNotFoundError:
+            print("O ficheiro ainda não existe.")
+            print(f"A criar: {file}.txt")
+            labelresultado.configure(text="Ficheiro não existe!", text_color="red")
+        break
