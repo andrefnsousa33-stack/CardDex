@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 The project follows Semantic Versioning.
 ---
 
+## [1.2.3] - 2026-03-14
+
+### Changed
+- Project documentation (README).
+- Cleaned Repository
+---
+
 
 ## [1.2.2] - 2026-03-14
 

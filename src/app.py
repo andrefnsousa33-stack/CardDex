@@ -8,7 +8,7 @@ class AppCDB(customtkinter.CTk):
     def __init__(self):
         super().__init__()
         self.geometry("500x500")
-        self.title("CardDex v1.2.2 Stable")
+        self.title("CardDex v1.2.3 Stable")
         self.gestor = None
 
         self.paginas = {
