@@ -10,4 +10,3 @@ from .removlist_frame import RemovlistFrame
 from .removct_frame import RemovctFrame
 from .removctinf_frame import RemovctinfFrame
 from .base_frame import BaseFrame
-# Sempre que criares um novo, acrescentas uma linha aqui

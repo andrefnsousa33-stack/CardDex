@@ -1,7 +1,8 @@
-from CDBinterface import AppCDB
+import src
+from src import app
 
 def main():
-    app = AppCDB()
+    app = src.AppCDB()
     app.mainloop()
 
 if __name__ == "__main__":

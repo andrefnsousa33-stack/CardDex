@@ -1,13 +1,14 @@
 import customtkinter
-import CDBlogic
-import frames
+from . import frames
+from . import logic
+from .logic.logic import GestorTabelas 
 
 
 class AppCDB(customtkinter.CTk):
     def __init__(self):
         super().__init__()
         self.geometry("500x500")
-        self.title("CardDex v1.2.1 Stable")
+        self.title("CardDex v1.2.2 Stable")
         self.gestor = None
 
         self.paginas = {
@@ -30,7 +31,7 @@ class AppCDB(customtkinter.CTk):
         self.trocar_frame("menu")
 
     def configurar_gestor(self, nome_lista):
-        self.gestor = CDBlogic.GestorTabelas(nome_lista)
+        self.gestor = GestorTabelas(nome_lista)
         print(f"--- DEBUG: A ACEDER AO FICHEIRO: {nome_lista}.db ---")
 
     def trocar_frame(self, nome_do_frame):
