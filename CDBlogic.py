@@ -12,13 +12,7 @@ class GestorTabelas:
     def criar_tabela(self):
         conn = self.conectar()
         cursor = conn.cursor()
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS cartas (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nome TEXT NOT NULL,
-                ident TEXT NOT NULL
-            )
-        """)
+        cursor.execute("""CREATE TABLE IF NOT EXISTS cartas (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, ident TEXT NOT NULL) """)
         conn.commit()
         conn.close()
 
@@ -37,11 +31,13 @@ class GestorTabelas:
             print(f"O erro foi: {e}") 
             return False
 
+
     def eliminar_ficheiro_lista(self):
         if os.path.exists(self.nome_db):
             os.remove(self.nome_db)
             return True
         return False
+
 
     def adicionar_carta(self, nome, ident):
         self.criar_tabela()

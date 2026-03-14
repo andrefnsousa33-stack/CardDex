@@ -4,11 +4,10 @@ import frames
 
 
 class AppCDB(customtkinter.CTk):
-
     def __init__(self):
         super().__init__()
         self.geometry("500x500")
-        self.title("CardDex Beta v1.1.1 stable")
+        self.title("CardDex v1.1.1 Stable")
         self.gestor = None
 
         self.paginas = {
@@ -50,11 +49,11 @@ class AppCDB(customtkinter.CTk):
         self.configurar_gestor(nome_fich)
         conteudo = self.gestor.verificar_existencia()
         if conteudo == True and acaobool == True:
-            self.trocar_frame(nextframe)
             self.msn_file = nome_fich
+            self.trocar_frame(nextframe)
         elif conteudo == True and acaobool == False:
-            self.trocar_frame(nextframe)
             self.msn_file = nome_fich
+            self.trocar_frame(nextframe)
         else:
             label_resver.configure(text=f"O ficheiro {nome_fich} nao existe!", text_color="white")
 
