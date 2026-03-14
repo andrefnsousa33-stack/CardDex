@@ -1,16 +1,16 @@
 import customtkinter
-from logic import GestorFile
+from CDBv1logic import GestorTabelas # Importamos a nossa classe de lógica
 
-
-class AppContactos(customtkinter.CTk):
+class AppCDB(customtkinter.CTk):
+    """Janela principal da aplicação organizada por frames e POO."""
 
     def __init__(self):
         super().__init__()
         self.geometry("500x500")
-        self.title("CardDex v1.1.1 stable")
+        self.title("CardDex v1.2.0")
 
         # Frames (Contentores)
-        self.frame_atual = None
+        self.frame_atual = None # Começa sem nenhum
         self.frame_menu = customtkinter.CTkFrame(self)
         self.frame_ver = customtkinter.CTkFrame(self, fg_color="transparent")
         self.frame_adc = customtkinter.CTkFrame(self, fg_color="transparent")
@@ -27,6 +27,7 @@ class AppContactos(customtkinter.CTk):
         self.abrir_menu()
 
     def desenhar_interface(self):
+        """Cria os elementos visuais da app."""
         # Menu
         customtkinter.CTkLabel(self.frame_menu, text="MENU", font=("Arial", 20)).pack(pady=10)
         customtkinter.CTkButton(self.frame_menu, text="Ver", command=lambda:self.trocar_frame(self.frame_ver)).pack(pady=5)
@@ -57,14 +58,14 @@ class AppContactos(customtkinter.CTk):
         self.label_adcex = customtkinter.CTkLabel(self.frame_adcex, text="")
         self.label_adcex.pack(pady=20)
 
-        # Ecrã Adicionar Nomes e Tipos a Existente
+        # Ecrã Adicionar Nomes e Telemoveis a Existente
         self.label_adctit = customtkinter.CTkLabel(self.frame_adcexinf, text="")
         self.label_adctit.pack(pady=20)
         self.entry_name = customtkinter.CTkEntry(self.frame_adcexinf, placeholder_text="Nome...")
         self.entry_name.pack(pady=20)
-        self.entry_tel = customtkinter.CTkEntry(self.frame_adcexinf, placeholder_text="Tipo")
-        self.entry_tel.pack(pady=20)
-        customtkinter.CTkButton(self.frame_adcexinf, text="Adicionar", command=lambda:self.adicionar_contact(self.entry_filetoadd, self.entry_name, self.entry_tel, self.label_resadc)).pack(pady=5)
+        self.entry_id = customtkinter.CTkEntry(self.frame_adcexinf, placeholder_text="ID...")
+        self.entry_id.pack(pady=20)
+        customtkinter.CTkButton(self.frame_adcexinf, text="Adicionar", command=lambda:self.adicionar_card(self.entry_filetoadd, self.entry_name, self.entry_id, self.label_resadc)).pack(pady=5)
         customtkinter.CTkButton(self.frame_adcexinf, text="Voltar", command=lambda:self.mostrar_menu()).pack(pady=5)
         self.label_resadc = customtkinter.CTkLabel(self.frame_adcexinf, text="")
         self.label_resadc.pack(pady=20)
@@ -83,9 +84,9 @@ class AppContactos(customtkinter.CTk):
         self.label_adcnwtit.pack(pady=20)
         self.entry_nname = customtkinter.CTkEntry(self.frame_adcnwinf, placeholder_text="Nome...")
         self.entry_nname.pack(pady=20)
-        self.entry_ntel = customtkinter.CTkEntry(self.frame_adcnwinf, placeholder_text="Tipo")
-        self.entry_ntel.pack(pady=20)
-        customtkinter.CTkButton(self.frame_adcnwinf, text="Adicionar", command=lambda:self.adicionar_contact(self.entry_listanova, self.entry_nname, self.entry_ntel, self.label_resadcnwinf)).pack(pady=5)
+        self.entry_nid = customtkinter.CTkEntry(self.frame_adcnwinf, placeholder_text="ID...")
+        self.entry_nid.pack(pady=20)
+        customtkinter.CTkButton(self.frame_adcnwinf, text="Adicionar", command=lambda:self.adicionar_card(self.entry_listanova, self.entry_nname, self.entry_nid, self.label_resadcnwinf)).pack(pady=5)
         customtkinter.CTkButton(self.frame_adcnwinf, text="Voltar", command=lambda:self.mostrar_menu()).pack(pady=5)
         self.label_resadcnwinf = customtkinter.CTkLabel(self.frame_adcnwinf, text="")
         self.label_resadcnwinf.pack(pady=20)
@@ -116,89 +117,106 @@ class AppContactos(customtkinter.CTk):
 
         # Ecrã Remover Contactos a Existente
         self.label_remtit = customtkinter.CTkLabel(self.frame_removconinf, text="")
-        customtkinter.CTkLabel(self.frame_removconinf, text="Insere um nome ou um tipo", font=("Arial", 18)).pack(pady=10)
+        customtkinter.CTkLabel(self.frame_removconinf, text="Insere um nome ou um ID", font=("Arial", 18)).pack(pady=10)
         self.label_remtit.pack(pady=20)
         self.rem_name = customtkinter.CTkEntry(self.frame_removconinf, placeholder_text="Nome...")
         self.rem_name.pack(pady=20)
-        self.rem_tel = customtkinter.CTkEntry(self.frame_removconinf, placeholder_text="Tipo")
-        self.rem_tel.pack(pady=20)
-        customtkinter.CTkButton(self.frame_removconinf, text="Remover", command=lambda:self.remov_contact(self.entry_lstrem, self.rem_name, self.rem_tel, self.label_resremfi)).pack(pady=5)
+        self.rem_id = customtkinter.CTkEntry(self.frame_removconinf, placeholder_text="ID...")
+        self.rem_id.pack(pady=20)
+        customtkinter.CTkButton(self.frame_removconinf, text="Remover", command=lambda:self.remov_card(self.entry_lstrem, self.rem_name, self.rem_id, self.label_resremfi)).pack(pady=5)
         customtkinter.CTkButton(self.frame_removconinf, text="Voltar", command=lambda:self.mostrar_menu()).pack(pady=5)
         self.label_resremfi = customtkinter.CTkLabel(self.frame_removconinf, text="")
         self.label_resremfi.pack(pady=20)
 
+    # --- Navegação ---
     def abrir_menu(self):
         self.frame_menu.pack(pady=20, padx=20, fill="both", expand=True)
         self.frame_atual = self.frame_menu
 
     def mostrar_menu(self):
+        # Se já existir um frame aberto, fecha-o
         if self.frame_atual is not None:
             self.frame_atual.pack_forget()  
+        # Abre o novo e guarda-o como o "atual"
         self.frame_menu.pack(pady=20, padx=20, fill="both", expand=True)
         self.frame_atual = self.frame_menu
 
     def trocar_frame(self, novo_frame):
+        # Se já existir um frame aberto, fecha-o
         if self.frame_atual is not None:
             self.frame_atual.pack_forget()  
+        # Abre o novo e guarda-o como o "atual"
         novo_frame.pack(pady=20, padx=20, fill="both", expand=True)
         self.frame_atual = novo_frame
     
+
+    # --- Lógica de Botão ---
     def remov_lista(self, listaremov, label_res):
         lista = listaremov.get().strip()
-        gestor = GestorFile(lista)
-        acao = gestor.eliminar_lista()
-        if acao == True:
-            label_res.configure(text="Ficheiro eliminado!", text_color="green")
+    
+        if not lista:
+            label_res.configure(text="Escreve o nome da lista!", text_color="yellow")
+            return
+
+        gestor = GestorTabelas(lista)
+        # A variável 'acao' vai receber o True ou False que definimos no logic.py
+        if gestor.eliminar_ficheiro_lista(): 
+            label_res.configure(text="Tabela eliminada!", text_color="green")
         else:
-            label_res.configure(text="Ficheiro nao existe!", text_color="red")
+            label_res.configure(text="Erro ao eliminar!", text_color="red")
+
 
     def criar_file(self, listacriar, nextframe, lblres, titnxt):
         lista = listacriar.get().strip()
-        gestor = GestorFile(lista)
+        gestor = GestorTabelas(lista)
         existe = gestor.verificar_existencia()
         if existe == True:
             lblres.configure(text="Ficheiro já existe!", text_color="red")
+
         else:
-            gestor.criar()
+            gestor.criar_tabela()
             self.trocar_frame(nextframe)
             titnxt.configure(text=f"Adicionar cartas a {lista}")
 
-    def remov_contact(self, filetoedit, name, tel, label_res):
+    def remov_card(self, filetoedit, name, tel, label_res):
         fileedit = filetoedit.get().strip()
         newname = name.get().strip()
         newtel = tel.get().strip()
         if not newname and not newtel:
-            label_res.configure(text="Escreve um nome ou um tipo!", text_color="red")
+            label_res.configure(text="Escreve um nome ou um ID!", text_color="red")
         else:
-            gestor = GestorFile(fileedit)
-            conteudo = gestor.remover_contact(newname, newtel)
+            gestor = GestorTabelas(fileedit)
+            conteudo = gestor.remover_carta(newname, newtel)
             label_res.configure(text=conteudo, text_color="red")
             name.delete(0, 'end')
             tel.delete(0, 'end')
 
-    def adicionar_contact(self, filetoedit, name, tel, label_res):
+    def adicionar_card(self, filetoedit, name, tel, label_res):
         fileedit = filetoedit.get().strip()
         newname = name.get().strip()
         newtel = tel.get().strip()
         if not newname and not newtel:
-            label_res.configure(text="Escreve o nome e o tipo!", text_color="red")
+            label_res.configure(text="Escreve um nome e um ID!", text_color="red")
         elif not newname:
-            label_res.configure(text="Escreve o nome!", text_color="red")
+            label_res.configure(text="Escreve um nome!", text_color="red")
         elif not newtel:
-            label_res.configure(text="Escreve o numero!", text_color="red")
+            label_res.configure(text="Escreve um ID!", text_color="red")
         else:
-            gestor = GestorFile(fileedit)
-            gestor.adicionar_contacto(newname, newtel)
+            gestor = GestorTabelas(fileedit)
+            gestor.adicionar_carta(newname, newtel)
             label_res.configure(text="Carta adicionada!", text_color="green")
             name.delete(0, 'end')
             tel.delete(0, 'end')
 
     def verif_file_trocar_frame(self, label_resver, entryfi, nextframe, titnxframe, acaobool):
+        """Faz a ponte entre a Entry da interface e a Classe de Lógica."""
         nome_fich = entryfi.get().strip()
         if not nome_fich:
             label_resver.configure(text="Escreve um nome!", text_color="red")
             return
-        gestor = GestorFile(nome_fich)
+
+        # Criamos o objeto de lógica e pedimos os dados
+        gestor = GestorTabelas(nome_fich)
         conteudo = gestor.verificar_existencia()
         if conteudo == True and acaobool == True:
             self.trocar_frame(nextframe)
@@ -207,15 +225,21 @@ class AppContactos(customtkinter.CTk):
             self.trocar_frame(nextframe)
             titnxframe.configure(text=f"REMOVER DE {nome_fich}")           
         else:
-            label_resver.configure(text=f"A lista {nome_fich}.txt nao existe!", text_color="white")
+            label_resver.configure(text=f"O ficheiro {nome_fich} nao existe!", text_color="white")
 
     def executar_leitura(self, label_res, entry):
+        """Faz a ponte entre a Entry da interface e a Classe de Lógica."""
         nome_fich = entry.get().strip()
         if not nome_fich:
             label_res.configure(text="Escreve um nome!", text_color="red")
             return
 
-        label_res.configure(text="A carregar...") 
-        gestor = GestorFile(nome_fich)
-        conteudo = gestor.ler_conteudo()
-        label_res.configure(text=conteudo, text_color="white")
+        # Criamos o objeto de lógica e pedimos os dados
+        label_res.configure(text="") 
+        gestor = GestorTabelas(nome_fich)
+        acao = gestor.verificar_existencia()
+        if acao == True:
+            conteudo = gestor.ler_tudo()
+            label_res.configure(text=conteudo, text_color="white")
+        else:
+            label_res.configure(text=f"O ficheiro {nome_fich} nao existe", text_color="red")
