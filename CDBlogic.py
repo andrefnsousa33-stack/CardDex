@@ -37,15 +37,14 @@ class GestorTabelas:
             print(f"O erro foi: {e}") 
             return False
 
-
     def eliminar_ficheiro_lista(self):
         if os.path.exists(self.nome_db):
             os.remove(self.nome_db)
             return True
         return False
 
-
     def adicionar_carta(self, nome, ident):
+        self.criar_tabela()
         conn = self.conectar()
         cursor = conn.cursor()
         cursor.execute("INSERT INTO cartas (nome, ident) VALUES (?, ?)", (nome, ident))
@@ -54,6 +53,7 @@ class GestorTabelas:
         return "Gravado na Base de Dados!"
 
     def ler_tudo(self):
+        print(f"DEBUG: A ler do ficheiro {self.nome_db}")
         conn = self.conectar()
         cursor = conn.cursor()
         cursor.execute("SELECT nome, ident FROM cartas")

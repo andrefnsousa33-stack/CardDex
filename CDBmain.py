@@ -1,4 +1,4 @@
-from CDBv1interface import AppCDB
+from CDBinterface import AppCDB
 
 def main():
     app = AppCDB()
